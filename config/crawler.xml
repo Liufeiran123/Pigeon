@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<configuration>
+
+    <index>
+        <ip>localhost</ip>
+        <port>5557</port>
+    </index>
+
+</configuration>

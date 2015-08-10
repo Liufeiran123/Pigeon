@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<configuration>
+
+    <index>
+        <ip>*</ip>
+        <port>5557</port>
+    </index>
+
+    <indexdb>/Users/liuqiang/PycharmProjects/Pigeon/index_data</indexdb>
+
+</configuration>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<configuration>
+
+    <search>
+        <ip>localhost</ip>
+        <port>5554</port>
+    </search>
+
+
+</configuration>
