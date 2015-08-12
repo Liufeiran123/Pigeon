@@ -39,8 +39,8 @@ class DmozSpider(scrapy.Spider):
 
         yield item
 
-    	link = response.xpath('//a/@href').extract()
-        for item_url in link:
-            if DmozSpider.pattern.match(item_url):
-                yield Request(item_url, callback=self.parse)
+    	#link = response.xpath('//a/@href').extract()
+        #for item_url in link:
+        #    if DmozSpider.pattern.match(item_url):
+        #       yield Request(item_url, callback=self.parse)
             

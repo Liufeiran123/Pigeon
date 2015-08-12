@@ -21,14 +21,29 @@ class CrawlerPipeline(object):
             use_unicode = False
         )
         self.textextractor = TextExtractor()
+        self.message = []
+
+    def returnmax(self,max):
+        print 'popo'
+        self.message[0] = max
+
     def process_item(self, item, spider):
         #index
-        message = []
-        message[0] = self.dbpool.runInteraction(self._conditional_insert, item)
-        message[1] = item['text']
-        SendText(message)
+        print "lllll"
+        d = self.dbpool.runInteraction(self._conditional_insert, item)
+        d.addCallback(self.returnmax)
+
+        print 'kk'
+
+        self.message[1] = item['text']
+
+        print 'lfr'
+        SendText(self.message)
+        print 'lfr1'
         return item
 
     def _conditional_insert(self, tx, item):
         tx.execute('insert into data(url,title,body,text) values (%s, %s, %s, %s)', (item['url'], item['title'], item['body'],item['text']))
-        return tx.execute("SELECT max(id) from data")
+        tx.execute("SELECT max(id) from data")
+        print 'kkkkkd'
+        return tx.fetchall()[0][0]
