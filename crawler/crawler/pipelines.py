@@ -4,38 +4,41 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-from twisted.enterprise import adbapi
+
 import MySQLdb
 import MySQLdb.cursors
 from IndexClient import SendText
-from TextExtractor import TextExtractor
 
 class CrawlerPipeline(object):
     def __init__(self):
-        self.dbpool = adbapi.ConnectionPool('MySQLdb',
-            db = 'crawler',
-            user = 'root',
-            passwd = '123',
-            cursorclass = MySQLdb.cursors.DictCursor,
-            charset = 'utf8',
-            use_unicode = False
-        )
-        self.textextractor = TextExtractor()
-        self.message = []
+        self.db = MySQLdb.connect(host="localhost", port=3307, user="root", passwd="123", db="crawler")
+        self.cursor = self.db.cursor()
 
-    def returnmax(self,max):
-        print 'popo'
-        self.message[0] = max
+
+    def insertitem(self,item):
+        try:
+            self.cursor.execute('insert into data(url,title,body,text) values (%s, %s, %s, %s)',(item['url'], item['title'], item['body'],item['text']))
+            self.db.commit()
+        except Exception,e:
+            print e
+            self.db.rollback()
+    def maxid(self):
+        sql = "SELECT max(id) FROM data"
+        try:
+            self.cursor.execute(sql)
+            mi = self.cursor.fetchone()
+
+        except Exception,e:
+            print e
+            print "Error: unable to fecth data"
+        return mi[0]
 
     def process_item(self, item, spider):
         #index
-        print "lllll"
-        d = self.dbpool.runInteraction(self._conditional_insert, item)
-        d.addCallback(self.returnmax)
-
-        print 'kk'
-
-        self.message[1] = item['text']
+        message = []
+        self.insertitem(item)
+        message.append(self.maxid())
+        message.append(item['text'])
 
         print 'lfr'
         SendText(self.message)

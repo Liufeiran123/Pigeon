@@ -11,7 +11,7 @@ import re
 class DmozSpider(scrapy.Spider):
     name = "dmoz"
     start_urls = [
-	"http://www.cnblogs.com/"
+	"http://www.163.com/"
     ]
 
     pattern = re.compile(r'^http')
