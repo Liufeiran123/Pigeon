@@ -11,12 +11,13 @@ from IndexClient import SendText
 
 class CrawlerPipeline(object):
     def __init__(self):
-        self.db = MySQLdb.connect(host="localhost", port=3307, user="root", passwd="123", db="crawler")
+        self.db = MySQLdb.connect(host="localhost", port=3307, user="root", passwd="123", db="crawler",charset='utf8')
         self.cursor = self.db.cursor()
 
 
     def insertitem(self,item):
         try:
+            print item['title']
             self.cursor.execute('insert into data(url,title,body,text) values (%s, %s, %s, %s)',(item['url'], item['title'], item['body'],item['text']))
             self.db.commit()
         except Exception,e:
@@ -44,9 +45,3 @@ class CrawlerPipeline(object):
         SendText(self.message)
         print 'lfr1'
         return item
-
-    def _conditional_insert(self, tx, item):
-        tx.execute('insert into data(url,title,body,text) values (%s, %s, %s, %s)', (item['url'], item['title'], item['body'],item['text']))
-        tx.execute("SELECT max(id) from data")
-        print 'kkkkkd'
-        return tx.fetchall()[0][0]

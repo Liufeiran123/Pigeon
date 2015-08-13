@@ -11,19 +11,19 @@ import re
 class DmozSpider(scrapy.Spider):
     name = "dmoz"
     start_urls = [
-	"http://www.163.com/"
+	"http://www.cnblogs.com/"
     ]
 
     pattern = re.compile(r'^http')
     te = TextExtractor()
-
-
 
     def parse(self, response):
         item = CrawlerItem()
 
         item['url'] = response.url.encode('utf-8')
         item['title'] = response.xpath('//title/text()').extract()[0].encode('utf-8')
+
+        print response.encoding
 
         if response.encoding == 'utf-8':
             item['body'] = response.body
