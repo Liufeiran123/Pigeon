@@ -19,4 +19,4 @@ socket = context.socket(zmq.REQ)
 socket.connect(socketstr)
 
 def SendText(message):
-    socket.send(message)
+    socket.send_pyobj(message)

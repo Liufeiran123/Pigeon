@@ -17,7 +17,6 @@ class CrawlerPipeline(object):
 
     def insertitem(self,item):
         try:
-            print item['title']
             self.cursor.execute('insert into data(url,title,body,text) values (%s, %s, %s, %s)',(item['url'], item['title'], item['body'],item['text']))
             self.db.commit()
         except Exception,e:
@@ -41,6 +40,6 @@ class CrawlerPipeline(object):
         message.append(item['text'])
 
         print 'lfr'
-        SendText(self.message)
+        SendText(message)
         print 'lfr1'
         return item
