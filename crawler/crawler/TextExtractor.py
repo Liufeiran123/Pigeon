@@ -23,11 +23,9 @@ class TextExtractor(object):
         self.lang = ''
 
     def langdetect(self,source):
+        tmp = source[:len(source)/200]
         try:
-            if len(source) <= 700:
-                return detect(source)
-            else:
-                return detect(source[:700])
+            return detect(tmp)
         except LangDetectException, e:
             return ''
 

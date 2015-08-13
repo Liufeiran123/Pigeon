@@ -31,7 +31,6 @@ class CrawlerPipeline(object):
 
         except Exception,e:
             print e
-            print "Error: unable to fecth data"
         return mi[0]
 
     def process_item(self, item, spider):

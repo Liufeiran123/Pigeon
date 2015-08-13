@@ -23,15 +23,12 @@ class DmozSpider(scrapy.Spider):
         item['url'] = response.url.encode('utf-8')
         item['title'] = response.xpath('//title/text()').extract()[0].encode('utf-8')
 
-        print response.encoding
-
         if response.encoding == 'utf-8':
             item['body'] = response.body
         else:
             item['body'] = response.body.decode(response.encoding).encode('utf-8')
 
         c = item['body'].decode("utf-8")
-        print "current url is ",item['url']
 
         c = DmozSpider.te.extract(c)
         c = c.encode('utf-8')
