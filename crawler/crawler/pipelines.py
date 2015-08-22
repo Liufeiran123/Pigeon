@@ -8,6 +8,8 @@
 import MySQLdb
 import MySQLdb.cursors
 from IndexClient import SendText
+import index_msg_pb2
+from mmseg.search import seg_txt_2_dict
 
 class CrawlerPipeline(object):
     def __init__(self):
@@ -34,12 +36,15 @@ class CrawlerPipeline(object):
 
     def process_item(self, item, spider):
         #index
-        message = []
+        messages_obj = index_msg_pb2.index_msg()
         self.insertitem(item)
-        message.append(self.maxid())
-        message.append(item['text'])
-
+        messages_obj.max_id = self.maxid()
+        for word, value in seg_txt_2_dict(item['text']).iteritems():
+            singitem = messages_obj.single_item.add()
+            singitem.item = word;
+            singitem.num = value;
+        messages_obj_str = messages_obj.SerializeToString()
         print 'lfr'
-        SendText(message)
+        SendText(messages_obj_str)
         print 'lfr1'
         return item

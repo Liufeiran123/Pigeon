@@ -4,7 +4,7 @@
 
     <index>
         <ip>localhost</ip>
-        <port>5557</port>
+        <port>6000</port>
     </index>
 
 </configuration>

@@ -4,7 +4,7 @@
 
     <search>
         <ip>localhost</ip>
-        <port>5554</port>
+        <port>7000</port>
     </search>
 
 

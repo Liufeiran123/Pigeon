@@ -1,6 +1,6 @@
 from django import forms
 
-class AddForm(forms.Form):
+class SearchForm(forms.Form):
   a = forms.CharField()
   a.label=""
 

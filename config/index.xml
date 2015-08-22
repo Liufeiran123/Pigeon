@@ -4,9 +4,13 @@
 
     <index>
         <ip>*</ip>
-        <port>5557</port>
+        <port>6000</port>
     </index>
 
-    <indexdb>/Users/liuqiang/PycharmProjects/Pigeon/index_data</indexdb>
+    <search>
+        <ip>*</ip>
+        <port>7000</port>
+    </search>
+
 
 </configuration>

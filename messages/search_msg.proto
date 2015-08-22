@@ -1,0 +1,9 @@
+message search_msg
+{
+    repeated bytes word = 1;
+}
+
+message search_result
+{
+    repeated int32 id = 1;
+}

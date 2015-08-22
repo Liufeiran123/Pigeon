@@ -1,27 +1,35 @@
-__author__ = 'liuqiang'
+#coding=utf-8
 
-from twisted.enterprise import adbapi
 import MySQLdb
 import MySQLdb.cursors
 
-dbpool = adbapi.ConnectionPool('MySQLdb',
-            db = 'crawler',
-            user = 'root',
-            passwd = '123',
-            cursorclass = MySQLdb.cursors.DictCursor,
-            charset = 'utf8',
-            use_unicode = False
-        )
 
-def _conditional_insert(self, tx, c):
+
+db = MySQLdb.connect(host="localhost", port=3307, user="root", passwd="123", db="crawler",charset='utf8')
+cursor = db.cursor()
+
+def select1(c):
     a = "SELECT url from data where id in("
     for i in c:
         a+=str(i)
         a+=","
     a = a[:-1]
     a+=')'
-    return tx.execute(a)
-
+    return a
 
 def GetURL(c):
-    return dbpool.runInteraction(_conditional_insert, c)
+    r = []
+    if c[0] == -10:
+       return r
+    a = select1(c)
+    try:
+        cursor.execute(a)
+        # 获取所有记录列表
+        results = cursor.fetchall()
+        for row in results:
+            r.append(row[0])
+    except Exception,e:
+        print e
+    return r
+
+

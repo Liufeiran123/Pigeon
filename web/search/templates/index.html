@@ -3,10 +3,10 @@
 <body>
 <p>输入您要搜索关键字</p>
  
-<form method='post'>
+<form action="/s/" method="get">
 {% csrf_token %}
 {{ form }}
-<input type="submit" value="手气不错">
+<input type="submit" value="搜索">
 </form>
  
  

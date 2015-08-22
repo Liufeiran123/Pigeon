@@ -1,0 +1,10 @@
+message SingleItem
+{
+    required bytes item = 1;
+    optional uint32 num = 2;
+}
+message index_msg
+{
+    required uint64 max_id = 1;
+    repeated SingleItem single_item = 2;
+}

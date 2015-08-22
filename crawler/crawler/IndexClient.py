@@ -14,9 +14,9 @@ port = node[0].childNodes[3].childNodes[0].nodeValue
 socketstr = 'tcp://'+ip+':'+port
 
 context = zmq.Context()
-socket = context.socket(zmq.REQ)
+socket = context.socket(zmq.PUSH)
 
 socket.connect(socketstr)
 
 def SendText(message):
-    socket.send_pyobj(message)
+    socket.send(message)
