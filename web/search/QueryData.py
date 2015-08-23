@@ -19,6 +19,8 @@ def select1(c):
 
 def GetURL(c):
     r = []
+    if len(c) == 0:
+        return r
     if c[0] == -10:
         return r
     a = select1(c)

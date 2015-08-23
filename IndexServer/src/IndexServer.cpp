@@ -24,6 +24,7 @@ void* index_thread(void* ptr) {
 		for (int i = 0; i < im.single_item_size(); ++i) {
 			const SingleItem ii = im.single_item(i);
 			it.insert(items::value_type(ii.item(), ii.num()));
+			cout<<ii.item()<<endl;
 		}
 		index_search::getInstance()->index(im.max_id(), it);
 	}
@@ -117,10 +118,8 @@ int main(int argc, char *argv[]) {
 			message_t request;
 
 			s2.recv(&request);
-			cout<<request.size()<<endl;
 			char *re_string = new char[request.size()];
 			memcpy((void*)re_string, request.data(), request.size());
-			cout<<"lfr"<<re_string<<endl;
 			search_msg sm;
 			search_result sr;
 			if (sm.ParseFromString(re_string)) {
@@ -128,10 +127,11 @@ int main(int argc, char *argv[]) {
 					t.push_back(sm.word(i));
 				}
 				index_search::getInstance()->search(t, r);
-				search_result sr;
+
 				for (result::const_iterator it = r.begin(); it != r.end();
 						++it) {
 					sr.add_id(*it);
+					cout<<"item "<<*it<<endl;
 				}
 			} else {
 				sr.add_id(-10);
@@ -147,8 +147,11 @@ int main(int argc, char *argv[]) {
 				 zmq_msg_send(&msg, s2, 0);
 				 */
 			}
+			cout<<"sr id size "<<sr.id_size()<<endl;
+
 			sr.SerializeToString(&buffer);
 			message_t reply(buffer.size());
+			cout<<"size "<<buffer.size()<<endl;
 			memcpy(reply.data(),buffer.data(), buffer.size());
 			s2.send(reply);
 			delete[] re_string;

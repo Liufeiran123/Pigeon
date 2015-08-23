@@ -14,9 +14,7 @@ def search(request):
     #form = SearchForm(request.GET)
     search_word = request.GET['a']
     messages_obj = search_msg_pb2.search_msg()
-    print 'ddd'
     seg_list = jieba.cut_for_search(search_word)
-    print 'eeee'
     wordlist = []
     for word in seg_list:
         wordlist.append(word)
@@ -35,10 +33,13 @@ def search(request):
 
     idset_str = SearchResult(messages_obj_str)
 
+    print len(idset_str)
+
     result_obj = search_msg_pb2.search_result()
 
     result_obj.ParseFromString(idset_str)
 
+    print result_obj.id
 
     urlset = GetURL(result_obj.id)
     if len(urlset) == 0:
