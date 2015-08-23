@@ -15,6 +15,7 @@ def select1(c):
         a+=","
     a = a[:-1]
     a+=')'
+    print a
     return a
 
 def GetURL(c):

@@ -16,9 +16,15 @@
 using namespace std;
 using namespace zmq;
 
+typedef struct{
+	char *str;
+	int length;
+}para;
+
 void* index_thread(void* ptr) {
-	char *str = (char*) ptr;
+	para *p = (para*) ptr;
 	index_msg im;
+	string str(p->str,p->length);
 	if (im.ParseFromString(str)) {
 		items it;
 		for (int i = 0; i < im.single_item_size(); ++i) {
@@ -28,7 +34,9 @@ void* index_thread(void* ptr) {
 		}
 		index_search::getInstance()->index(im.max_id(), it);
 	}
-	delete[] str;
+	delete[] p->str;
+	delete p;
+
 }
 
 int main(int argc, char *argv[]) {
@@ -101,12 +109,17 @@ int main(int argc, char *argv[]) {
 			pthread_t pid;
 			message_t request;
 			s1.recv(&request);
-			char *re_string = new char[request.size()];
-			memcpy(re_string, request.data(), request.size());
+			para *p = new para;
+			p->str = new char[request.size()];
+			memcpy(p->str, request.data(), request.size());
+			p->length = request.size();
+
 			int ret = pthread_create(&pid, NULL, index_thread,
-					(void*) re_string);
+					(void*) p);
 			if (ret < 0) {
-				delete[] re_string;
+
+				delete[] p->str;
+				delete p;
 			}
 		}
 
@@ -115,16 +128,30 @@ int main(int argc, char *argv[]) {
 			string buffer;
 			result r;
 			search_key t;
-			message_t request;
-
-			s2.recv(&request);
-			char *re_string = new char[request.size()];
-			memcpy((void*)re_string, request.data(), request.size());
 			search_msg sm;
 			search_result sr;
+			message_t request;
+			s2.recv(&request);
+
+			string re_string((char*)request.data(),request.size());
+
+		/*	char *re_string = new char[request.size()];
+			cout<<"\n\nrecv "<<request.size()<<endl;
+			memcpy((void*)re_string, request.data(), request.size());
+
+
+			for(int i = 0;i<request.size();++i)
+			{
+				cout<<(int)re_string[i]<<endl; //输出十六进制数
+			}
+
+			string strData(pData, request.));
+	*/
 			if (sm.ParseFromString(re_string)) {
+				cout<<"nsm par right"<<endl;
 				for (int i = 0; i < sm.word_size(); ++i) {
 					t.push_back(sm.word(i));
+					cout<<"sm word "<<sm.word(i)<<endl;
 				}
 				index_search::getInstance()->search(t, r);
 
@@ -134,6 +161,7 @@ int main(int argc, char *argv[]) {
 					cout<<"item "<<*it<<endl;
 				}
 			} else {
+				cout<<"sm par wrong"<<endl;
 				sr.add_id(-10);
 				/*	string buffer;
 				 sr.SerializeToString(&buffer);
@@ -154,7 +182,6 @@ int main(int argc, char *argv[]) {
 			cout<<"size "<<buffer.size()<<endl;
 			memcpy(reply.data(),buffer.data(), buffer.size());
 			s2.send(reply);
-			delete[] re_string;
 		}
 	}
 }

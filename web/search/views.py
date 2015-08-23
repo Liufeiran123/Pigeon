@@ -23,12 +23,15 @@ def search(request):
     for word in wordlist:#seg_txt_2_dict(search_word).iteritems():
         if not WordIsRight(word):
             continue
+        print word
         messages_obj.word.append(word.encode('UTF-8'))
     messages_obj_str = messages_obj.SerializeToString()
 
-    messages_obj1 = search_msg_pb2.search_msg()
+    print len(messages_obj_str)
 
-    messages_obj1.ParseFromString(messages_obj_str)
+   # messages_obj1 = search_msg_pb2.search_msg()
+
+   # messages_obj1.ParseFromString(messages_obj_str)
 
 
     idset_str = SearchResult(messages_obj_str)
