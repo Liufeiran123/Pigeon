@@ -28,9 +28,12 @@ class TextExtractor(object):
             return detect(tmp)
         except LangDetectException, e:
             return ''
+    def prune(self,txt):
+        return txt
 
     def extract(self,_html):
-        return self.parse(_html,False)
+        txt = self.parse(_html,False)
+        return self.prune(txt)
 
     def parse(self,_html,_flag):
         self.flag = _flag

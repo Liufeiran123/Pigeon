@@ -17,7 +17,5 @@ socketstr = 'tcp://'+ip+':'+port
 socket.connect(socketstr)
 
 def SearchResult(keyword):
-    print 'keke'
     socket.send(keyword)
-    print 'IOOO'
     return socket.recv()

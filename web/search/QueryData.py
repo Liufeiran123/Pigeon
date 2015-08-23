@@ -20,7 +20,7 @@ def select1(c):
 def GetURL(c):
     r = []
     if c[0] == -10:
-       return r
+        return r
     a = select1(c)
     try:
         cursor.execute(a)

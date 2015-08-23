@@ -53,7 +53,7 @@ void index_search::update_index(unsigned int id,items &t)
 }
 void index_search::search(search_key &t,result &r,int offset,int limit)
 {
-	Query query(Xapian::Query::OP_AND, t.begin(), t.end());
+	Query query(Xapian::Query::OP_OR, t.begin(), t.end());
 	enquire.set_query(query);
 	MSet matches = enquire.get_mset(offset, limit, 10000);
 	for (Xapian::MSetIterator i = matches.begin(); i != matches.end(); ++i)

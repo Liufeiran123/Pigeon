@@ -4,22 +4,41 @@ from QueryData import GetURL
 import search_msg_pb2
 from mmseg.search import seg_txt_2_dict
 from forms import SearchForm
+import jieba
+import sys
+sys.path.append("..")
+
+from util.processword import *
 
 def search(request):
     #form = SearchForm(request.GET)
     search_word = request.GET['a']
-    print search_word
     messages_obj = search_msg_pb2.search_msg()
-    for word, value in seg_txt_2_dict(search_word).iteritems():
-        messages_obj.word.append(word)
+    print 'ddd'
+    seg_list = jieba.cut_for_search(search_word)
+    print 'eeee'
+    wordlist = []
+    for word in seg_list:
+        wordlist.append(word)
+        wordlist = list(set(wordlist))
+    print wordlist
+    for word in wordlist:#seg_txt_2_dict(search_word).iteritems():
+        if not WordIsRight(word):
+            continue
+        messages_obj.word.append(word.encode('UTF-8'))
     messages_obj_str = messages_obj.SerializeToString()
+
+    messages_obj1 = search_msg_pb2.search_msg()
+
+    messages_obj1.ParseFromString(messages_obj_str)
+
 
     idset_str = SearchResult(messages_obj_str)
 
     result_obj = search_msg_pb2.search_result()
-    print 'po33'
+
     result_obj.ParseFromString(idset_str)
-    print '3223'
+
 
     urlset = GetURL(result_obj.id)
     if len(urlset) == 0:

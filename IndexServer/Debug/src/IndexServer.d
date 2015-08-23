@@ -1,4 +1,5 @@
 src/IndexServer.d: ../src/IndexServer.cpp \
+  /usr/local/Cellar/zeromq/4.1.2/include/zmq.hpp \
   /usr/local/Cellar/zeromq/4.1.2/include/zmq.h ../src/tinyxml.h \
   ../src/tinystr.h ../src/index_msg.pb.h \
   /usr/local/protobuffer/include/google/protobuf/stubs/common.h \
@@ -29,6 +30,8 @@ src/IndexServer.d: ../src/IndexServer.cpp \
   /usr/local/protobuffer/include/google/protobuf/stubs/casts.h \
   /usr/local/protobuffer/include/google/protobuf/extension_set.h \
   ../src/indexsearch.h ../src/search_msg.pb.h
+
+/usr/local/Cellar/zeromq/4.1.2/include/zmq.hpp:
 
 /usr/local/Cellar/zeromq/4.1.2/include/zmq.h:
 

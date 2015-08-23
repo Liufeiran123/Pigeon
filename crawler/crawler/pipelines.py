@@ -4,12 +4,17 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
-
+import codecs
 import MySQLdb
 import MySQLdb.cursors
 from IndexClient import SendText
 import index_msg_pb2
 from mmseg.search import seg_txt_2_dict
+import jieba
+import sys
+sys.path.append("..")
+from util.processword import *
+
 
 class CrawlerPipeline(object):
     def __init__(self):
@@ -36,15 +41,24 @@ class CrawlerPipeline(object):
 
     def process_item(self, item, spider):
         #index
+        wordlist =[]
         messages_obj = index_msg_pb2.index_msg()
         self.insertitem(item)
         messages_obj.max_id = self.maxid()
-        for word, value in seg_txt_2_dict(item['text']).iteritems():
+        seg_list = jieba.cut_for_search(item['text'])
+        for word in seg_list:
+            wordlist.append(word)
+        wordlist = list(set(wordlist))
+
+        for word in wordlist:       #seg_txt_2_dict(item['text']).iteritems():
+            if not WordIsRight(word):
+                continue
+            print word
             singitem = messages_obj.single_item.add()
-            singitem.item = word;
-            singitem.num = value;
+            singitem.item = word.encode('utf-8');
+            singitem.num = 1;
         messages_obj_str = messages_obj.SerializeToString()
-        print 'lfr'
+
         SendText(messages_obj_str)
         print 'lfr1'
         return item
